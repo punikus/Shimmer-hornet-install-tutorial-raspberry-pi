@@ -1,0 +1,88 @@
+# This is shimmer hornet install tutorial for raspberry pi os lite (64BIT)
+you will have to use this OS for hornet node.
+
+#First of all you will have to open following ports on your router for raspberry pi: 15600/tcp, 14626/udp and 80/tpc
+
+# Set superuser privileges:
+sudo su
+
+# install firewall
+apt install ufw
+ufw default allow outgoing
+ufw default deny incoming
+ufw allow ssh
+ufw allow 80/tcp
+ufw allow 14626/udp
+ufw allow 15600/tcp
+ufw enable
+
+
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+
+# Install docker & docker compose plugin:
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+apt update && apt upgrade -y
+
+
+# Install hornet. I installed the latest version of stardust (shimmer) hornet node, if you want IOTA hornet node, you got to choose crysalis
+ version on https://github.com/iotaledger/node-docker-setup/releases:
+mkdir hornet
+cd hornet
+curl -L -O "https://github.com/iotaledger/node-docker-setup/releases/download/v1.0.0-rc.16/node-docker-setup_stardust-v1.0.0-rc.16.tar.gz"
+tar -zxf node-docker-setup_stardust-v1.0.0-rc.16.tar.gz
+
+# With next command you will get your hash and your salt for the dashboard. just copy-paste when you get them for next step: 
+docker compose run hornet tool pwd-hash
+# You will get this two...
+  Your hash: 
+  Your salt: 
+
+# Create .env file with nano command for dashboard use and just copy the template under and paste it in the .env file. 
+NODE_HOST is your raspberry pi IP adress, I set it in my router always to be the same IP for raspberry pi, but i don't know if that is necessary. 
+DASHBOARD_PASSWORD is your hash that you generated in previous step and DASHBOARD_SALT is your salt:
+
+nano .env
+
+COMPOSE_FILE=docker-compose.yml
+NODE_HOST=
+DASHBOARD_PASSWORD=
+DASHBOARD_SALT=
+
+# Save and exit .env file
+
+# Examle
+COMPOSE_FILE=docker-compose.yml
+NODE_HOST=192.186.183.40
+DASHBOARD_PASSWORD=aeddf654ed3a56edf4s6a3ed5df46s35ref43sa5eef43w5e4f36we54f
+DASHBOARD_SALT=tyuj54t6fjyu46t85j46t8u47yj6t5j4f68e7r6eytwt6er5tete452t
+
+# Create the data folder:
+./prepare_docker.sh
+
+# Start the node:
+docker compose up -d
+
+# Stop the node:
+docker compose down
+
+
+# After starting the node you will be able to access your services in the browser at http://localhost/dashboard,
+just change localhost with your raspberrys IP.Or you can try your raspberry pi IP adress following :80 Example 192.168.183.40 . Good luck, i hope this helped you...
+And the official guide of how to install hornet: https://wiki.iota.org/hornet/2.0.0-rc.6/how_tos/using_docker/
+
+# I copy paste commands from official docker site, that's why "sudo" is in front, but it works this way also 
+and i am not shure about hornet version. This was my first install using docker.
