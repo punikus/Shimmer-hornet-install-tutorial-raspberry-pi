@@ -81,7 +81,7 @@ docker compose down
 
 
 # After starting the node you will be able to access your services in the browser at http://localhost/dashboard,
-just change localhost with your raspberrys IP.Or you can try your raspberry pi IP adress following :80 Example 192.168.183.40 . Good luck, i hope this helped you...
+just change localhost with your raspberrys IP.Or you can try your raspberry pi IP adress following :80 Example 192.168.183.40:80 . Good luck, i hope this helped you...
 And the official guide of how to install hornet: https://wiki.iota.org/hornet/2.0.0-rc.6/how_tos/using_docker/
 
 # I copy paste commands from official docker site, that's why "sudo" is in front, but it works this way also.
